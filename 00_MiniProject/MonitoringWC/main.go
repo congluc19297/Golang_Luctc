@@ -44,7 +44,7 @@ var listID []string
 func main() {
 	var matchsToday []matchToday
 	// c := cron.New()
-	// c.AddFunc("1 * * * * *", monitoringWC)
+	// c.AddFunc("30 * * * * *", monitoringWC)
 	// fmt.Println("Before Start")
 	// c.Run()
 	monitoringWC(&matchsToday)
@@ -91,7 +91,7 @@ func sendMailToUsers(match matchToday) error {
 	// Connect to the server, authenticate, set the sender and recipient,
 	// and send the email all in one step.
 	mime := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
-	subject := "Subject: Kết quả thi đấu WorldCup" + "!\n"
+	subject := "Subject: Kết quả thi đấu WorldCup trận" + " " + match.HomeTeam.Country + " vs " + match.AwayTeam.Country + "!\n"
 	body := emailTemplateHTML(match)
 	err := smtp.SendMail(
 		"smtp.gmail.com:25",
@@ -139,7 +139,8 @@ func checkFifaIDSended(fifaID string) bool {
 
 func fetchMatchsToday(matchsToday *[]matchToday) error {
 	// fmt.Println((*matchsToday)[0])
-	res, err := http.Get("http://worldcup.sfg.io/matches/today")
+	// res, err := http.Get("http://worldcup.sfg.io/matches/today")
+	res, err := http.Get("http://worldcup.sfg.io/matches/country?fifa_code=ARG")
 	if err != nil {
 		return err
 	}
