@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"os"
 	"sync"
-	"time"
 
+	"github.com/lib/pq"
 	_ "github.com/lib/pq"
 )
 
@@ -20,9 +20,10 @@ const (
 )
 
 type quoteInfo struct {
-	Quote string
-	Auth  string
-	Kind  string
+	ID       int
+	Quote    string
+	Auth     string
+	Category string
 }
 
 var db *sql.DB
@@ -76,16 +77,11 @@ func readCSVFile(fileName string, setComma rune) [][]string {
 
 func createTableQuote() {
 
-	// _, err := db.Exec(`CREATE TABLE IF NOT EXISTS quote (
-	// 	id 		SERIAL PRIMARY KEY NOT NULL,
-	// 	quote	TEXT NOT NULL,
-	// 	auth 	TEXT NOT NULL,
-	// 	kind 	TEXT
-	// )`)
 	_, err := db.Exec(`CREATE TABLE IF NOT EXISTS quote (
+		id 		SERIAL PRIMARY KEY NOT NULL,
 		quote	TEXT NOT NULL,
-		auth 	TEXT PRIMARY KEY NOT NULL,
-		kind 	TEXT NOT NULL
+		author 	TEXT UNIQUE NOT NULL,
+		category 	TEXT
 	)`)
 
 	if err != nil {
@@ -98,72 +94,66 @@ func insertDataToQuote(csvData [][]string, fragNum int) {
 	lenData := len(csvData)
 	fmt.Println("Inserting...")
 	var i int
-	var fragment int
-	start := time.Now()
-	fmt.Println(start)
+	var fragmentVal int
 
 	wg := sync.WaitGroup{}
 
 	wg.Add(fragNum)
-	fragment = lenData / fragNum
+	fragmentVal = lenData / fragNum
 	for i = 0; i < fragNum; i++ {
-		go func(idx int) {
-			defer wg.Done()
-			start := fragment * idx
-			end := fragment * (idx + 1)
-			if idx == (fragNum - 1) {
-				end = lenData
-			}
-			for j := start; j < end; j++ {
-				_, _ = db.Exec("INSERT INTO quote (QUOTE, AUTH, KIND) VALUES ($1, $2, $3)", csvData[j][0], csvData[j][1], csvData[j][2])
-			}
-
-		}(i)
+		go devideFragment(i, fragmentVal, fragNum, csvData, lenData, &wg)
 	}
-	// fmt.Println(fragment)
-	/*for i = 0; i < 100; i++ {
-		_, err := db.Exec("INSERT INTO quote (QUOTE, AUTH, KIND) VALUES ($1, $2, $3)", csvData[i][0], csvData[i][1], csvData[i][2])
+	wg.Wait()
+}
+
+func devideFragment(idx int, fragmentVal int, fragNum int, csvData [][]string, lenData int, wg *sync.WaitGroup) {
+	defer wg.Done()
+	start := fragmentVal * idx
+	end := fragmentVal * (idx + 1)
+	if idx == (fragNum - 1) {
+		end = lenData
+	}
+	for j := start; j < end; j++ {
+		_, err := db.Exec("INSERT INTO quote (quote, author, category) VALUES ($1, $2, $3)", csvData[j][0], csvData[j][1], csvData[j][2])
+		if err != nil {
+			pqErr, ok := err.(*pq.Error)
+			if ok {
+				// fmt.Println(pqErr.Code.Name())
+				if pqErr.Code.Name() == "unique_violation" {
+					continue
+				} else {
+					panic(err)
+				}
+			}
+		}
+	}
+}
+
+func getAllQuote() []quoteInfo {
+	rows, err := db.Query("SELECT * FROM quote order by id;")
+	if err != nil {
+		panic(err)
+	}
+	defer rows.Close()
+
+	quotes := make([]quoteInfo, 0)
+	for rows.Next() {
+		quote := quoteInfo{}
+		err := rows.Scan(&quote.ID, &quote.Quote, &quote.Auth, &quote.Category)
 		if err != nil {
 			panic(err)
 		}
-	}*/
-	wg.Wait()
-	end := time.Now()
-	fmt.Println(end)
-
-	// for _, each := range csvData {
-	// 	_, err := db.Exec("INSERT INTO quote (QUOTE, AUTH, KIND) VALUES ($1, $2, $3)", each[0], each[1], each[2])
-
-	// 	if err != nil {
-	// 		panic(err)
-	// 	}
-	// }
+		quotes = append(quotes, quote)
+	}
+	if err = rows.Err(); err != nil {
+		panic(err)
+	}
+	return quotes
 }
 
 func main() {
 	csvData := readCSVFile("./quotes_all.csv", ';')
-
 	createTableQuote()
 	insertDataToQuote(csvData, 90)
-
-	/*50 goroutines
-	2018-06-19 14:32:28.539460984 +0700 +07 m=+0.135548243
-	2018-06-19 14:33:18.980734256 +0700 +07 m=+50.576821457*/
-
-	/*60 goroutines
-	2018-06-19 14:35:34.017387773 +0700 +07 m=+0.037819768
-	2018-06-19 14:36:10.819939037 +0700 +07 m=+36.840371200*/
-
-	/*70 goroutines
-	2018-06-19 14:36:40.21244279 +0700 +07 m=+0.040360130
-	2018-06-19 14:37:15.471842468 +0700 +07 m=+35.299759986*/
-
-	/*80 goroutines
-	2018-06-19 14:41:40.523446589 +0700 +07 m=+0.127882018
-	2018-06-19 14:42:07.619207725 +0700 +07 m=+27.223643151*/
-
-	/*90 goroutines
-	2018-06-19 14:43:33.279647591 +0700 +07 m=+0.038205097
-	2018-06-19 14:43:55.139216944 +0700 +07 m=+21.897774611*/
 	db.Close()
 }

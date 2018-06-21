@@ -1,0 +1,67 @@
+
+<!DOCTYPE html>
+<html lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Title Page</title>
+
+        <!-- Bootstrap CSS -->
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.3/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+        <link rel="stylesheet" href="./assets/css/styles.css">
+    </head>
+    <body>
+        <div class="container">
+            <h1 class="text-center">Show Employee</h1>
+            
+            <div class="row">
+                <div class="col-xs-6 col-xs-push-3">
+                    {{if len .}}
+                        {{range .}}
+                            <div class="panel panel-success">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">ID</h3>
+                                </div>
+                                <div class="panel-body">{{.ID}}</div>
+                            </div>
+                            <div class="panel panel-success">
+                                <div class="panel-heading">
+                                        <h3 class="panel-title">Name</h3>
+                                </div>
+                                <div class="panel-body">{{.Name}}</div>
+                            </div>
+                            <div class="panel panel-success">
+                                <div class="panel-heading">
+                                        <h3 class="panel-title">Score</h3>
+                                </div>
+                                <div class="panel-body">{{.Score}}</div>
+                            </div>
+                            <div class="panel panel-success">
+                                <div class="panel-heading">
+                                        <h3 class="panel-title">Salary</h3>
+                                </div>
+                                <div class="panel-body">{{.Salary}}</div>
+                            </div>
+                        {{end}}
+                    {{else}}
+                        Empty
+                    {{end}}
+                            
+                </div>
+            </div>
+        </div>
+
+        <!-- jQuery -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <!-- Bootstrap JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    </body>
+</html>

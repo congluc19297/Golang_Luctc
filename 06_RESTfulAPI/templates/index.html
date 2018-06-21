@@ -1,0 +1,72 @@
+
+<!DOCTYPE html>
+<html lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Title Page</title>
+
+        <!-- Bootstrap CSS -->
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.3/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+        <link rel="stylesheet" href="./templates/assets/css/styles.css">
+    </head>
+    <body>
+        <div class="container">
+            <h1 class="text-center">List of employees</h1>
+
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID{{len .}}</th>
+                            <th>Name</th>
+                            <th>Score</th>
+                            <th>Salary</th>
+                            <th>
+                                <a href="javascript:void(0)"></a>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {{if len .}}
+                        {{range .}}
+                            <tr>
+                                <td>{{.ID}}</td>
+                                <td><a href="/show-empl/{{.ID}}">{{.Name}}</a></td>
+                                <td>{{.Score}}</td>
+                                <td>{{.Salary}}</td>
+                                <td><a href="/delete/process/{{.ID}}">Delete</a></td>
+                            </tr>
+                        {{end}}
+                    {{else}}
+                        <tr>
+                            <td colspan="5">Empty</td>
+                        </tr>
+                    {{end}}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="5">
+                                <a href="/add-empl.htm" class="btn btn-success">Add new employee</a>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            
+        </div>
+
+        <!-- jQuery -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <!-- Bootstrap JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    </body>
+</html>
