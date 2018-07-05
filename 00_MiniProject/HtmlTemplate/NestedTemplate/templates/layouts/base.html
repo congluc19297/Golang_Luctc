@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head lang="">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{block "title" .}} {{end}}</title>
+
+    <link rel="stylesheet" href="/templates/assets/libs/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/templates/assets/libs/bootstrap/css/bootstrap-theme.css.map">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.3/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" href="/templates/assets/css/styles.css">
+</head>
+    <body>
+        {{block "header" .}} {{end}}
+        {{template "content" .}}
+        {{block "footer" .}} {{end}}
+        <script src="/templates/assets/libs/jquery/jquery.min.js"></script>
+        <script src="/templates/assets/libs/bootstrap/js/bootstrap.min.js"></script>
+    </body>
+</html>

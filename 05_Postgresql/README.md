@@ -29,3 +29,11 @@ Connection:
 - Post: 5432
 - Username: postgres (default)
 - Password: test123
+
+# ALTER
+ALTER TABLE users ALTER COLUMN fullname DROP  NOT NULL;
+
+ALTER TABLE users ADD CONSTRAINT users_username_unique UNIQUE (username);
+ALTER TABLE users DROP CONSTRAINT users_username_unique;
+
+CREATE EXTENSION pgcrypto;
