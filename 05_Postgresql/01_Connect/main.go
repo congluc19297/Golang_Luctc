@@ -12,7 +12,7 @@ const (
 	port     = 5432
 	user     = "postgres"
 	password = "test123"
-	dbname   = "quotes"
+	dbname   = "payment_gateway"
 )
 
 func main() {
@@ -20,6 +20,7 @@ func main() {
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
 		"password=%s dbname=%s sslmode=disable",
 		host, port, user, password, dbname)
+	fmt.Println(psqlInfo)
 
 	// Opening a connection to our database
 	db, err := sql.Open("postgres", psqlInfo)
