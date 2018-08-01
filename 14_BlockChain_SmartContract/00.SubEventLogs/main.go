@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/hex"
 	"fmt"
 	"log"
 	"math/big"
@@ -55,20 +56,27 @@ func main() {
 
 			fmt.Println(string(event.Sender.Hex()))   // foo
 			fmt.Println(string(event.Value.Uint64())) // bar
+			// fmt.Println(string(hex.Dump(vLog.Data)))
+
 			// fmt.Println(vLog.Address.String())
 			// fmt.Println(vLog.TxHash.String())
 
-			// txHash := common.HexToHash(vLog.TxHash.Hex())
-			// tx, isPending, err := client.TransactionByHash(context.Background(), txHash)
-			// if err != nil {
-			// 	log.Fatal(err)
-			// }
+			txHash := common.HexToHash(vLog.TxHash.Hex())
+			tx, isPending, err := client.TransactionByHash(context.Background(), txHash)
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			fmt.Println("String: ", string(tx.Data()))
+			fmt.Println("BytesToHash: ", common.BytesToHash(tx.Data()).Hex())
+			fmt.Println("BytesToAddress: ", common.BytesToAddress(tx.Data()).Hex())
+			fmt.Println("EncodeToString: ", hex.EncodeToString(tx.Data()))
 
 			// fmt.Println("To: ", tx.To().Hex())
 			// fmt.Println(tx.Value())
 			// fmt.Println(tx.Gas())
 			// fmt.Println(tx.Hash().Hex())
-			// fmt.Println(isPending)
+			fmt.Println("Pending: ", isPending)
 			// fmt.Println("-------------------------------------------------------------------")
 		}
 	}

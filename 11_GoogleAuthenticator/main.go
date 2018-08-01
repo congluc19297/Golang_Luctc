@@ -14,14 +14,15 @@ func main() {
 	otp, err := twofactor.NewTOTP("congluc19297@gmail.com", "Rock Ship", crypto.SHA1, 6)
 
 	b, err := otp.ToBytes()
-	fmt.Println(b)
-	fmt.Println("Chuyen ve string")
+	
+	// fmt.Println(b)
+	// fmt.Println("Chuyen ve string")
 
-	fmt.Println(string(b))
+	// fmt.Println(string(b))
 	str := string(b)
-	fmt.Println("Chuyen nguoc ve lai byte")
-
-	fmt.Println([]byte(str))
+	// fmt.Println("Chuyen nguoc ve lai byte")
+	_ = str
+	// fmt.Println([]byte(str))
 
 	if err != nil {
 		log.Println(err)
@@ -29,6 +30,8 @@ func main() {
 	// fmt.Println(otp)
 
 	qrBytes, err := otp.QR()
+	fmt.Println(otp.Secret())
+	fmt.Println(len(otp.Secret()))
 
 	// fmt.Println(qrBytes)
 	_ = qrBytes
@@ -53,7 +56,7 @@ func main() {
 		}
 
 		// w.Write(`{'test':err}`, qrBytes)
-		w.Write(b)
+		w.Write(qrBytes)
 		// w.Write([]byte(fmt.Sprintf(`{"error": "%s"}`, qrBytes)))
 	})
 	http.ListenAndServe(":1234", r)
