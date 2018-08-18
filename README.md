@@ -1,4 +1,4 @@
-# RockShip_Intern_Luctc
+# Golang_Luctc
 
 ## 3. Download the latest version (i.e 1.7.3)
 ```
