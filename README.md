@@ -20,6 +20,8 @@ $ sudo tar -C /usr/local -xvzf go1.7.3.linux-amd64.tar.gz
 ## 5. $PATH environment variable.
 
 ```
+sudo vi .bashrc
+
 export GOPATH=$HOME/go
 export GOROOT="/usr/local/go"
 export PATH=$PATH:$GOROOT/bin
